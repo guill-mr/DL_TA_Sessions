@@ -160,9 +160,10 @@ class LinearRegressionModel:
             self.intercept = b0
         
         self.params_.clear()
-        self.params_["beta_0"] = self.intercept
+        self.params_["params_gd"] = {}
+        self.params_["params_gd"]["beta_0"] = self.intercept
         for i in range(1, len(self.betas)+1):
-            self.params_[f"beta_{i}"] = self.betas[i-1]
+            self.params_["params_gd"][f"beta_{i}"] = self.betas[i-1]
         
         return self
 
@@ -180,9 +181,9 @@ class LinearRegressionModel:
         X, y = self._prepare(X, y)
         
         # We need to add a bias term (intercept) into the X in this case:
-        print(X)
+        # print(X)
         X = np.hstack([np.ones((X.shape[0], 1), dtype=X.dtype), X])
-        print(X)
+        # print(X)
 
         # Closed-form solution: (X^T X)^(-1) X^T y
         XTX = X.T @ X
@@ -206,7 +207,7 @@ class LinearRegressionModel:
         
         # We need to add a bias term (intercept) into the X in this case:
         X = np.hstack([np.ones((X.shape[0], 1), dtype=X.dtype), X])
-        print("X.shape:", X.shape, "y.shape:", y.shape)
+        # print("X.shape:", X.shape, "y.shape:", y.shape)
 
         # SVD decomposition of X. We could use the numpy linear algebra implementation of the SVD 
         # if we wanted a less involved approach.
@@ -215,10 +216,10 @@ class LinearRegressionModel:
         ### HERE WE START TO COMPUTE THE CODE TO REPLACE np.linalg.svd() CALL ###
         # First we compute the covariance matrix X^T X
         XtX = X.T @ X
-        print("XtX.shape:", XtX.shape)
+        # print("XtX.shape:", XtX.shape)
         # Then we compute the eigen-decomposition of X^T X
         eigvals, V = np.linalg.eigh(XtX)
-        print("eigvals.shape:", eigvals.shape, "V.shape:", V.shape)
+        # print("eigvals.shape:", eigvals.shape, "V.shape:", V.shape)
         # Clip negative eigenvalues to zero
         eigvals = np.clip(eigvals, 0.0, None)
         # Take square roots of eigenvalues to get singular values
@@ -233,23 +234,23 @@ class LinearRegressionModel:
         keep_idx = S > tol
         S = S[keep_idx]
         V = V[:, keep_idx]
-        print("S.shape:", S.shape, "V.shape:", V.shape)
+        # print("S.shape:", S.shape, "V.shape:", V.shape)
         # Compute U from X, V, S
         U = (X @ V) / S
-        print("U.shape:", U.shape)
+        # print("U.shape:", U.shape)
         VT = V.T
 
         ### BELOW HERE CODE CONTINUES AFTER np.linalg.svd() CALL ###
         # Build the pseudo-inverse of the diagonal matrix of singular values
         singular_values_inv = np.where(S > 1e-12, 1.0 / S, 0.0).astype(X.dtype)
         S_inv = np.diag(singular_values_inv)
-        print("S_inv.shape:", S_inv.shape)
+        # print("S_inv.shape:", S_inv.shape)
 
         # Moore-Penrose pseudoinverse using the SVD factors
         pseudo_inv = VT.T @ S_inv @ U.T
-        print("pseudo_inv.shape:", pseudo_inv.shape)
+        # print("pseudo_inv.shape:", pseudo_inv.shape)
         Betas = pseudo_inv @ y
-        print("Betas.shape:", Betas.shape)
+        # print("Betas.shape:", Betas.shape)
 
         self.params_svd_.clear()
         for i in range(len(Betas)):
