@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "catboost>=1.2.8",
+    "category-encoders>=2.9.0",
     "fastparquet>=2024.11.0",
     "iprogress>=0.4",
     "ipykernel>=6.30.1",
