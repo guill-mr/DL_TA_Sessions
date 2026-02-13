@@ -25,6 +25,7 @@ dependencies = [
     "seaborn>=0.13.2",
     "sympy>=1.14.0",
     "torch>=2.10.0",
+    "torchmetrics>=1.8.2",
     "ucimlrepo>=0.0.7",
     "xgboost>=3.1.1",
 ]
