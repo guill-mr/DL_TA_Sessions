@@ -315,4 +315,4 @@ with torch.no_grad():
 # Save
 submission = pd.DataFrame({'icustay_id': test_hef['icustay_id'], 'prediction': y_proba})
 submission.to_csv(f'../data/MIMIC/{date_minutes}_pytorch_mlp_optuna_submission.csv', index=False)
-print("Saved prediction to ../data/MIMIC/pytorch_mlp_optuna_submission.csv")
+print(f"Saved prediction to ../data/MIMIC/{date_minutes}_pytorch_mlp_optuna_submission.csv")
