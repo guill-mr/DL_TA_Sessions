@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
 
 """
 In this notebook we have the boilerplate tools used to visualize the data.
@@ -54,4 +56,16 @@ def plot_one_per_class(dataset, class_names) -> None:
         axes[class_id].axis('off')
 
     plt.suptitle('At least one raw example from each class', fontsize=14)
+    plt.show()
+
+
+def plot_confusion_matrix(y_true, y_pred, class_names, title='Test confusion matrix') -> None:
+    cm = confusion_matrix(y_true, y_pred)
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                xticklabels=class_names, yticklabels=class_names)
+    plt.title(title)
+    plt.xlabel('Predicted label')
+    plt.ylabel('True label')
+    plt.tight_layout()
     plt.show()
